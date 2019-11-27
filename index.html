@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>占いの館〜あなたの運命の人〜</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <div class="yoko">
+        <div class="d-flex justify-center">
+          <v-text-field
+            class="yoko300"
+            v-model="name"
+            label="name"
+            single-line
+          ></v-text-field>
+          <div class="my-2">
+            <v-btn @click="nameClick">名前を入力して始める</v-btn>
+          </div>
+        </div>
+        <div class="nitaku">２択に答えて{{startName}}の運命の人導きます</div>
+        <div class="content" v-if="content1">
+          <h2>{{questionText}}</h2>
+          <div class="d-flex justify-center kaijo">
+            <div class="left">
+              <p>{{questionL}}</p>
+              <div class="my-2">
+                <v-btn @click="eventLeft(number)">左を選ぶ</v-btn>
+              </div>
+            </div>
+            <div class="right">
+              <p>{{questionR}}</p>
+              <div class="my-2">
+                <v-btn @click="eventRight(number)">右を選ぶ</v-btn>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="result">
+          <transition name="fade">
+            <div v-if="result1" class="result1">
+              <h2>あなたに必要なのは妥協です</h2>
+              <v-btn @click="nameClick">もう一度やる？</v-btn>
+            </div>
+            <div v-if="result2">
+              <h2>あなたの運命の人はらんこさんです⭐</h2>
+              <div class="result2-img">
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/lunch-app-16cce.appspot.com/o/FB_IMG_1574786704985.jpg?alt=media&token=a3017dc6-2950-4a49-9397-b767dbcd44bf"
+                />
+              </div>
+            </div>
+            <div v-if="result3">
+              <h2>あなたの運命の人は:宮崎あおいです。</h2>
+              <div class="result2-img">
+                <img
+                  src="https://pbs.twimg.com/media/DtMmmFTV4AA_XII.jpg"
+                  alt=""
+                />
+              </div>
+            </div>
+          </transition>
+        </div>
+      </div>
+      <!-- <button @click="test">test</button> -->
+    </div>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      var app = new Vue({
+        el: '#app',
+        data: {
+          name: '',
+          startName: 'あなた',
+          content1: true,
+          result1: false,
+          result2: false,
+          result3: false,
+          number: 0,
+          questionText: '',
+          questionR: '',
+          questionL: '',
+          question: [
+            '可愛い系と美人系ならどっち？',
+            '優しい人とちゃんと叱ってくれる人ならどっち？',
+            '年上？年下？',
+            'お酒は飲める方がいい？',
+            '背は？',
+            'ジム女子はどう？',
+            'Sに見えて実はMな女の子はどう？',
+            '写真取るのは好き？',
+            'らんこ？',
+            '男性と女性なら？'
+          ],
+          answerL: [
+            '可愛い系',
+            '優しい人',
+            '年上',
+            '飲める方がいい',
+            '低い方がいい',
+            'あり',
+            'ぐっとくる！',
+            '好き！',
+            'Yes！',
+            '女性'
+          ],
+          answerR: [
+            '美人系',
+            '叱ってくれる人',
+            '年下',
+            '飲めない方がいい',
+            '高い方がいい',
+            'なし',
+            '別に？',
+            '別に？',
+            'No...',
+            '男性'
+          ]
+        },
+        methods: {
+          test() {
+            console.log('a');
+          },
+          nameClick() {
+            if (this.number == 9) {
+              this.result1 = false;
+            }
+            if (this.name == 'まっつん') {
+              console.log('good');
+              this.special();
+            } else {
+              this.start = true;
+              this.startName = this.name;
+              this.questionText = this.question[0];
+              this.questionL = this.answerL[0];
+              this.questionR = this.answerR[0];
+              this.number = 1;
+            }
+          },
+          eventRight(i) {
+            if (i == 9) return (this.result1 = true);
+            this.number++;
+            this.questionText = this.question[i + 1];
+            this.questionR = this.answerR[i + 1];
+            this.questionL = this.answerL[i + 1];
+          },
+
+          eventLeft(i) {
+            if (i > 4) return (this.result2 = true);
+            this.number++;
+            this.questionText = this.question[i + 1];
+            this.questionR = this.answerR[i + 1];
+            this.questionL = this.answerL[i + 1];
+          },
+
+          special() {
+            this.result3 = true;
+          }
+        }
+      });
+    </script>
+  </body>
+  <style>
+    .flex {
+      display: flex;
+    }
+
+    .nitaku {
+      margin-top: 50px;
+      color: red;
+    }
+
+    .yoko300 {
+      width: 300px;
+    }
+
+    .yoko {
+      margin: 0 auto;
+      width: 800px;
+    }
+
+    .content {
+      margin-top: 50px;
+    }
+
+    .left,
+    .right {
+      width: 40%;
+      margin-top: 30px;
+    }
+
+    .left p,
+    .right p {
+      margin-bottom: 20px;
+    }
+
+    .left {
+      float: left;
+    }
+
+    .right {
+      float: right;
+    }
+
+    .kaijo::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    #result {
+      width: 1000px;
+      margin: 0 auto;
+      height: 300px;
+      color: red;
+      font-weight: bold;
+    }
+
+    .result1 h2 {
+      font-size: 40px;
+    }
+
+    .result2-img {
+      height: 200px;
+      width: 200px;
+    }
+
+    .result2-img img {
+      height: 200px;
+      width: auto;
+      object-fit: cover;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.5s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+  </style>
+</html>
